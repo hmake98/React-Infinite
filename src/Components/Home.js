@@ -44,12 +44,16 @@ export default class Home extends Component {
         let { page } = this.state;
         page++;
         this.setState({ page });
-        fetch(`https://reqres.in/api/users?page=${page}`).then(res => res.json()).then(json => {
-            if (json.data) {
-                this.setState({ users: this.state.users.concat(json.data) });
-                this.setState({ loading: false });
-            }
-        });
+        setInterval(() => {
+            fetch(`https://reqres.in/api/users?page=${page}`).then(res => res.json()).then(json => {
+                if (json.data) {
+                    this.setState({ users: this.state.users.concat(json.data) });
+                    this.setState({ loading: false });
+                } else {
+                    this.setState({ loading: false });
+                }
+            });
+        }, 4000);
     }
 
     handleLogout = () => {
@@ -61,29 +65,26 @@ export default class Home extends Component {
         if (this.state.toLogin) {
             return <Redirect to="/login" />
         }
-        if (this.state.loading) {
-            return <div className="text-white"> Loading... </div>
-        } else {
-            return (
-                <div className="Home">
-                    <nav className="navbar navbar-light bg-light">
-                        <a className="navbar-brand" href="#"> Forstap </a>
-                        <ul className="navbar-nav">
-                            <li className="nav-item">
-                                <a className="nav-link"> Hello, {this.state.user.email} </a>
-                            </li>
-                        </ul>
-                        <a href="" onClick={this.handleLogout}> Logout </a>
-                    </nav>
-                    <div className="container">
-                        <div className="row">
-                            {this.state.users.map((item, index) => {
-                                return <Card key={index} avatar={item.avatar} email={item.email} first_name={item.first_name} id={item.id} last_name={item.last_name} />
-                            })}
-                        </div>
+        return (
+            <div className="Home">
+                <nav className="navbar navbar-light bg-light">
+                    <a className="navbar-brand" href="#"> Forstap </a>
+                    <ul className="navbar-nav">
+                        <li className="nav-item">
+                            <a className="nav-link"> Hello, {this.state.user.email} </a>
+                        </li>
+                    </ul>
+                    <a href="" onClick={this.handleLogout}> Logout </a>
+                </nav>
+                <div className="container">
+                    <div className="row">
+                        {this.state.loading ? <div className="text-white"> Loading... </div> : 
+                        this.state.users.map((item, index) => {
+                            return <Card key={index} avatar={item.avatar} email={item.email} first_name={item.first_name} id={item.id} last_name={item.last_name} />
+                        })}
                     </div>
                 </div>
-            );
-        }
+            </div>
+        );
     }
 }
