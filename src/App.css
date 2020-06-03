@@ -5,6 +5,13 @@
   text-align: center;
 }
 
-.form-signin{
+.form-signin {
   padding: 0px 50px 0px 50px;
+}
+
+.Loader {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
